@@ -1,0 +1,29 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug (ST-Link)",
+            "type": "cortex-debug",
+            "request": "launch",
+            "servertype": "stlink",
+            "device": "STM32F767ZI",
+            "interface": "swd",
+            "runToEntryPoint": "main",
+            "executable": "${workspaceFolder}/build/Debug/${workspaceFolderBasename}.elf",
+            "svdFile": "${config:stm32.cltPath}/STMicroelectronics_CMSIS_SVD/STM32F767.svd",
+            "stlinkPath": "${config:stm32.cltPath}/STLink-gdb-server/bin/ST-LINK_gdbserver.exe",
+            "armToolchainPath": "${config:stm32.cltPath}/GNU-tools-for-STM32/bin/",
+            "gdbPath": "${config:stm32.cltPath}/GNU-tools-for-STM32/bin/arm-none-eabi-gdb.exe",
+            "serverArgs": [
+                "-i", "066CFF565671525067152241"
+            ],
+            "preLaunchTask": "Build",
+            "postDebugTask": "Post Debug Task",
+            "showDevDebugOutput": "none",
+            "liveWatch": {
+                "enabled": true,
+                "samplesPerSecond": 4
+            }
+        }
+    ]
+}

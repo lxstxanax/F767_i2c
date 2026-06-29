@@ -1,0 +1,256 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Build",
+            "type": "cmake",
+            "command": "build",
+            "problemMatcher": "$gcc",
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "options": {
+                "statusbar": {
+                    "hide": false,
+                    "color": "#22d63a"
+                }
+            }
+        },
+        {
+            "label": "Clean",
+            "type": "cmake",
+            "command": "clean",
+            "problemMatcher": "$gcc",
+            "group": "build",
+            "options": {
+                "statusbar": {
+                    "hide": false,
+                    "color": "#e91f11"
+                }
+            }
+        },
+        {
+            "label": "Clean & Rebuild",
+            "type": "cmake",
+            "command": "cleanRebuild",
+            "problemMatcher": "$gcc",
+            "group": "build",
+            "options": {
+                "statusbar": {
+                    "hide": false,
+                    "color": "#e9e507"
+                }
+            }
+        },
+        {
+            "label": "BuildSize",
+            "type": "shell",
+            "command": "arm-none-eabi-size",
+            "args": ["./build/Debug/${workspaceFolderBasename}.elf"],
+            "group": "build",
+            "dependsOn": ["Build"],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#0cec2a",
+                    "filePattern": ""
+                }
+            }
+        },
+        {
+            "label": "OpenConfiguration",
+            "type": "shell",
+            "command": "STM32CubeMX",
+            "args": ["./${workspaceFolderBasename}.ioc"],
+            "group": "build",
+            "dependsOn": [],
+            "dependsOrder": "sequence",
+            "problemMatcher": [],
+            "presentation": {
+                "reveal": "always"
+            },
+            "options": {
+                "statusbar": {
+                    "color": "#13e6e6",
+                    "filePattern": "",
+                    "icon": {
+                        "id": "gear"
+                    }
+                }
+            }
+        },
+        {
+            "label": "Flash STM32",
+            "type": "shell",
+            "command": "STM32_Programmer_CLI",
+            "args": [
+                "-c",
+                "port=SWD",
+                "-w",
+                "./build/Debug/${workspaceFolderBasename}.elf",
+                "0x8000000",
+                "-hardRst",
+                "--start"
+            ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "dependsOn": ["Build", "BuildSize"],
+            "dependsOrder": "sequence",
+            "options": {
+                "statusbar": {
+                    "hide": false,
+                    "color": "#13e6e6",
+                    "detail": "Build, show size, flash and reset",
+                    "icon": {
+                        "id": "play"
+                    }
+                }
+            }
+        },
+        {
+            "label": "Reset",
+            "type": "shell",
+            "command": "STM32_Programmer_CLI",
+            "args": ["-c", "port=SWD", "-hardRst", "--start"],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "dependsOn": [],
+            "dependsOrder": "sequence",
+            "options": {
+                "statusbar": {
+                    "hide": false,
+                    "color": "#13e6e6",
+                    "detail": "Reset the MCU",
+                    "icon": {
+                        "id": "refresh"
+                    }
+                }
+            }
+        },
+        {
+            "label": "Erase & Flash STM32",
+            "type": "shell",
+            "command": "STM32_Programmer_CLI",
+            "args": [
+                "-c",
+                "port=SWD",
+                "-w",
+                "./build/Debug/${workspaceFolderBasename}.elf",
+                "0x8000000",
+                "-hardRst",
+                "--start"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "dependsOn": ["Full CHIP Erase", "Build", "BuildSize"],
+            "dependsOrder": "sequence",
+            "options": {
+                "statusbar": {
+                    "hide": false,
+                    "color": "#d8e613",
+                    "detail": "Erase, build, flash and reset",
+                    "icon": {
+                        "id": "gear"
+                    }
+                }
+            }
+        },
+        {
+            "label": "Full CHIP Erase",
+            "type": "shell",
+            "command": "STM32_Programmer_CLI",
+            "args": [
+                "-c",
+                "port=SWD",
+                "INDEX=0",
+                "mode=UR",
+                "-e",
+                "ALL",
+                "-hardRst"
+            ],
+            "group": "build",
+            "presentation": {
+                "echo": true,
+                "reveal": "always",
+                "focus": false,
+                "panel": "shared",
+                "showReuseMessage": true,
+                "clear": false
+            },
+            "problemMatcher": [],
+            "dependsOn": [],
+            "dependsOrder": "sequence",
+            "options": {
+                "statusbar": {
+                    "hide": false,
+                    "color": "#f53404",
+                    "detail": "Erase the entire chip",
+                    "icon": {
+                        "id": "trash"
+                    }
+                }
+            }
+        },
+        {
+            "label": "Start Debug",
+            "type": "shell",
+            "command": "${command:workbench.action.debug.start}",
+            "options": {
+                "statusbar": {
+                    "hide": false,
+                    "color": "#d67922",
+                    "detail": "Start Debug",
+                    "icon": {
+                        "id": "debug-start"
+                    }
+                }
+            }
+        },
+        {
+            "label": "Post Debug Task",
+            "type": "shell",
+            "command": "echo 'Debug session ended.'",
+            "problemMatcher": [],
+            "presentation": {
+                "clear": true
+            },
+            "options": {
+                "statusbar": {
+                    "hide": true
+                }
+            }
+        }
+    ]
+}
